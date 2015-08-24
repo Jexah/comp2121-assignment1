@@ -4,48 +4,62 @@ import java.util.LinkedList;
 
 public class FileManager implements Runnable{
 
-	PrintWriter log;
-	LinkedList<String> logWrite;
-	Integer mailCounter;
+	// Define local variables
+	private Integer mailCounter;
 
 	public FileManager(){
-		logWrite = new LinkedList<String>();
+		// Create emails directory if it doesn't exist
+		(new File("emails")).mkdir();
+
 		mailCounter = 0;
 	}
 
+	// Log with no user specified
 	public void log(String str){
 		log(str, null);
 	}
 
+	// Append formatted string to log file and print to console.
 	public synchronized void log(String str, Socket clientSocket){
+		// Get current date.
 		String currentDate = new java.util.Date().toString();
-		if(clientSocket == null){
-			logWrite.add(currentDate + "|SYSTEM|" + str);
-		}else{
-			logWrite.add(currentDate + "|" + clientSocket.getInetAddress().getHostName() + "|" + str);	
-		}
-
+		PrintWriter logFile = null;
 		try{
-			log = new PrintWriter(new BufferedWriter(new FileWriter("log.txt", true)));
-			for(int i = logWrite.size(); i-- != 0;){
-				String strkk = logWrite.removeFirst();
-				log.println(strkk);
-				System.out.println(strkk);
+
+			// Create log file if it doesn't exist, then open for appending.
+			logFile = new PrintWriter(new BufferedWriter(new FileWriter("log.txt", true)));
+
+			if(clientSocket == null){
+				// The log request does not have a user reference, so we use the local system
+				logFile.println(currentDate + "|SYSTEM|" + str);
+				System.out.println(currentDate + "|SYSTEM|" + str);
+			}else{
+				// The log request contains a user reference, so we use it.
+				logFile.println(currentDate + "|" + clientSocket.getInetAddress().getHostName() + "|" + str);
+				System.out.println(currentDate + "|" + clientSocket.getInetAddress().getHostName() + "|" + str);
 			}
-			closeFile(log);
+
+			// Attempt to close the file
+			closeFile(logFile);
 		}catch(IOException e){
 			System.out.println("Failed to open log file for appending.");
-			closeFile(log);
+			closeFile(logFile);
 		}catch(Exception e){
-			closeFile(log);
-			System.out.println("Could not write to log file.");
+			System.out.println("Failed to save log data.");
+			closeFile(logFile);
 		}
 	}
 
+	// Save email to disk.
 	public synchronized void email(String sender, String recipient, String subject, String body){
+		// Get the date of email saved.
 		String currentDate = new java.util.Date().toString();
+
+		// Define email writer
 		PrintWriter newEmail = null;
+
 		try{
+			// Parse arguments and write to new emailj.txt file
 			newEmail = new PrintWriter(new BufferedWriter(new FileWriter("emails/email" + mailCounter + ".txt")));
 			newEmail.println("Message " + mailCounter);
 			newEmail.println("From: " + sender);
@@ -55,28 +69,32 @@ public class FileManager implements Runnable{
 			newEmail.println("Body: " + body);
 			closeFile(newEmail);
 		}catch(IOException e){
-			System.out.println("Failed to open email file for writing.");
+			log("Failed to open email file for writing.");
 			closeFile(newEmail);
 		}catch(Exception e){
+			log("Could not write to email file.");
 			closeFile(newEmail);
-			System.out.println("Could not write to email file.");
 		}
 	}
 
+	// Close a PrintWriter stream
 	private void closeFile(PrintWriter w){
+
+		// If the PrintWriter is null, no need to close the stream
 		if(w == null){
 			return;
 		}
 
 		try{
+			// PrintWriter is not null, attempt to close stream, otherwise throw error.
 			w.close();
 		}catch(Exception e){
-			System.out.println("Failed to close file stream");
 			log("Failed to close file stream");
 		}
 	}
 
+	// Server started, and FileManager created successfully.
 	public void run(){
-		log("Server started");
+		log("Server started successfully");
 	}
 }
