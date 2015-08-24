@@ -12,14 +12,20 @@ To run the interface, simply run `java MySMTPServer`.
 To test the server, use any TCP client (such as `telnet` on Windows or `tcpclient` on Linux).
 
 Valid commands are listed:
-* `HELO                                ` Returns what the server thinks is your host, and what the server thinks is it's host.
-* `MAIL FROM:<localdomain@domain.tld>` ` Specifies the email address to send the email from.
-* `RCPT TO:  <localdomain@domain.tld>` ` Specifies the email address to send the email to.
-* `DATA                                ` Begin the email content.
-  * `MIME-Version:                     ` Specify the MIME Version of the email.
-  * `Date:                             ` Specify the date that the email was written on.
-  * `To:                               ` Specify the cosmetic recipient.
-  * `From:                             ` Specify the cosmetic sender.
-  * `Subject:                          ` Specify the subject.
-  * `Content-Type:                     ` Specify the content type.
-* `QUIT                                ` Disconnect from the server.
+| Command                              | Function                                                                              |
+| ------------------------------------ |:------------------------------------------------------------------------------------- |
+| 'HELO'                               | Returns what the server thinks is your host, and what the server thinks is it's host. |
+| `MAIL FROM:<localdomain@domain.tld>` | Specifies the email address to send the email from.                                   |
+| `RCPT TO:  <localdomain@domain.tld>` | Specifies the email address to send the email to.                                     |
+| `DATA`                               | Begin the email content.                                                              |
+| `QUIT`                               | Disconnect from the server.                                                           |
+
+DATA properties are listed below:
+| Property                             | Function                                                                              |
+| ------------------------------------ |:------------------------------------------------------------------------------------- |
+| 'MIME-Version: <version#>            | Specify the MIME Version of the email.                                                |
+| `Date:<date>`                        | Specify the date that the email was written on.                                       |
+| `To:<name>`                          | Specify the cosmetic recipient.                                                       |
+| `From:<name>`                        | Specify the cosmetic sender.                                                          |
+| `Subject:<subject>`                  | Specify the subject.                                                                  |
+| `Content-Type:<content_type>`        | Specify the content type.                                                             |
