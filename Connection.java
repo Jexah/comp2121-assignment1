@@ -212,7 +212,13 @@ class Connection implements Runnable{
 
 						// All is good, write the email
 						if(sender != null && recipient != null){
-							fm.email(sender, recipient, subject, body);
+							fm.email(
+								from 	!= null ? from 		: "", 
+								to 		!= null ? to 		: "", 
+								subject != null ? subject 	: "", 
+								date 	!= null ? date 		: "", 
+								body 	!= null ? body 		: ""
+							);
 						}
 						break;
 					case "quit":

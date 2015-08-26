@@ -51,10 +51,7 @@ public class FileManager implements Runnable{
 	}
 
 	// Save email to disk.
-	public synchronized void email(String sender, String recipient, String subject, String body){
-		// Get the date of email saved.
-		String currentDate = new java.util.Date().toString();
-
+	public synchronized void email(String dataFrom, String dataTo, String dataSubject, String dataDate, String dataBody){
 		// Define email writer
 		PrintWriter newEmail = null;
 
@@ -62,11 +59,11 @@ public class FileManager implements Runnable{
 			// Parse arguments and write to new emailj.txt file
 			newEmail = new PrintWriter(new BufferedWriter(new FileWriter("emails/email" + mailCounter + ".txt")));
 			newEmail.println("Message " + mailCounter);
-			newEmail.println("From: " + sender);
-			newEmail.println("To: " + recipient);
-			newEmail.println("Date: " + currentDate);
-			newEmail.println("Subject: " + subject);
-			newEmail.println("Body: " + body);
+			newEmail.println("From: " + dataFrom);
+			newEmail.println("To: " + dataTo);
+			newEmail.println("Date: " + dataDate);
+			newEmail.println("Subject: " + dataSubject);
+			newEmail.println("Body: " + dataBody);
 			closeFile(newEmail);
 		}catch(IOException e){
 			log("Failed to open email file for writing.");
